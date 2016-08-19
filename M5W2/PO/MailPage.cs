@@ -1,5 +1,6 @@
 ﻿using System;
 using M5W2.M5W2.Data;
+using M5W2.M5W2.PO.Panels;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.PageObjects;
@@ -10,9 +11,6 @@ namespace M5W2.M5W2.PO
     public class MailPage
     {
         private IWebDriver _driver;
-
-        private const string draftRowTemplate = "//div[@class='y6']/span[text()='{0}']/../span[contains(text(),'{1}')]";
-        private const string sentRowTemplate = "//tr[contains(@class,'zA')]//span[@email='{0}']/../../..//*[text()='{1}']";
 
         [FindsBy(How = How.XPath, Using = "//div[@class='z0']/div[@role='button' and @tabindex=0]")] public IWebElement createNewMailButton;
         [FindsBy(How = How.CssSelector, Using = ".Am.Al.editable")] public IWebElement mailBodyTextArea;
@@ -25,10 +23,17 @@ namespace M5W2.M5W2.PO
         [FindsBy(How = How.XPath, Using = "//a[contains(@href,'draft')]")] public IWebElement draftLink;
         [FindsBy(How = How.XPath, Using = "//a[contains(@href,'sent')]")] public IWebElement sentLink;
         [FindsBy(How = How.CssSelector, Using = ".n1tfz .gU.Up [role='button']")] public IWebElement sendButton;
+
+        public MailListPanel draftMailListPanel;
+        public MailListPanel sentMailListPanel;
+        public MailListPanel inboxMailListPanel;
         public MailPage(IWebDriver driver)
         {
             _driver = driver;
             PageFactory.InitElements(_driver, this);
+            draftMailListPanel = new MailListPanel(_driver);
+            draftMailListPanel = new DraftMailListPanel(draftMailListPanel);
+
         }
 
         public MailPage CreateNewMail(Mail mail)
@@ -50,7 +55,8 @@ namespace M5W2.M5W2.PO
         public MailPage VerifyMailPresentInDraftFolder(Mail mail)
         {
             draftLink.Click();
-            Assert.AreEqual(true, _driver.FindElement(By.XPath(string.Format(draftRowTemplate, mail.subject, mail.body))).Displayed);
+            Assert.True(draftMailListPanel.IsMailPresent(mail));
+          //  Assert.AreEqual(true, _driver.FindElement(By.XPath(string.Format(draftRowTemplate, mail.subject, mail.body))).Displayed);
             return this;
         }
 

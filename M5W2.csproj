@@ -92,6 +92,10 @@
     <Compile Include="M5W2\PO\LoginPage.cs" />
     <Compile Include="M5W2\PO\MailPage.cs" />
     <Compile Include="M5W2\PO\MainPage.cs" />
+    <Compile Include="M5W2\PO\Panels\DraftMailListPanel.cs" />
+    <Compile Include="M5W2\PO\Panels\InboxMailListPanel.cs" />
+    <Compile Include="M5W2\PO\Panels\MailListPanel.cs" />
+    <Compile Include="M5W2\PO\Panels\SentMailListPanel.cs" />
     <Compile Include="M5W2\Test\DataProvider\MailProvider.cs" />
     <Compile Include="M5W2\Test\TestScenarious\BaseTest.cs" />
     <Compile Include="M5W2\Test\TestScenarious\GoogleTest\DraftVerification.cs" />
