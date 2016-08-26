@@ -24,15 +24,17 @@ namespace M5W2.M5W2.PO
         [FindsBy(How = How.XPath, Using = "//a[contains(@href,'sent')]")] public IWebElement sentLink;
         [FindsBy(How = How.CssSelector, Using = ".n1tfz .gU.Up [role='button']")] public IWebElement sendButton;
 
-        public MailListPanel draftMailListPanel;
-        public MailListPanel sentMailListPanel;
-        public MailListPanel inboxMailListPanel;
+        public MailListPanelAbstract draftMailListPanel;
+        public MailListPanelAbstract sentMailListPanel;
+        public MailListPanelAbstract inboxMailListPanel;
         public MailPage(IWebDriver driver)
         {
             _driver = driver;
             PageFactory.InitElements(_driver, this);
             draftMailListPanel = new MailListPanel(_driver);
             draftMailListPanel = new DraftMailListPanel(draftMailListPanel);
+            sentMailListPanel = new MailListPanel(_driver);
+            sentMailListPanel = new SentMailListPanel(sentMailListPanel);
 
         }
 
@@ -56,14 +58,15 @@ namespace M5W2.M5W2.PO
         {
             draftLink.Click();
             Assert.True(draftMailListPanel.IsMailPresent(mail));
-          //  Assert.AreEqual(true, _driver.FindElement(By.XPath(string.Format(draftRowTemplate, mail.subject, mail.body))).Displayed);
             return this;
         }
 
         public MailPage VerifyMailContentInDraftFolder(Mail mail)
         {
             draftLink.Click();
-            _driver.FindElement(By.XPath(string.Format(draftRowTemplate, mail.subject, mail.body))).Click();
+    
+            draftMailListPanel.OpenMail(mail);
+
             Assert.AreEqual(mail.body, mailBodyTextArea.Text);
             sendToTextFieldForRead.Click();
             Assert.AreEqual(mail.mailTo, sendToTextFieldForRead.GetAttribute("email"));
@@ -75,18 +78,14 @@ namespace M5W2.M5W2.PO
         public MailPage VerifyMailNotPresentInDraftFolder(Mail mail)
         {
             draftLink.Click();
-            new WebDriverWait(_driver, new TimeSpan(0, 0, 25)).Until(
-                ExpectedConditions.InvisibilityOfElementLocated(
-                By.XPath(string.Format(draftRowTemplate, mail.subject, mail.body))));
-
+            Assert.False(draftMailListPanel.IsMailPresentAfterWait(mail));
             return this;
         }
 
         public MailPage VerifyMailPresentInSentFolder(Mail mail)
         {
             sentLink.Click();
-            Assert.AreEqual(true, _driver.FindElement(By.XPath(string.Format(sentRowTemplate, mail.mailTo, mail.subject))).Displayed);
-
+            Assert.True(draftMailListPanel.IsMailPresent(mail));
             return this;
         }
 
