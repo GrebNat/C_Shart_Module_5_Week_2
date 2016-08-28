@@ -87,6 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="M5W2\Data\Mail.cs" />
+    <Compile Include="M5W2\Data\IMail.cs" />
     <Compile Include="M5W2\Data\User.cs" />
     <Compile Include="M5W2\PO\AccountPanel.cs" />
     <Compile Include="M5W2\PO\LoginPage.cs" />

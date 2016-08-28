@@ -10,7 +10,7 @@ namespace M5W2.M5W2.Test.TestScenarious.GoogleTest
     {
 
         [Test, TestCaseSource(typeof(MailProvider),"testMail")]
-        public void VerifyMailSentCorrectly(Mail mail)
+        public void VerifyMailSentCorrectly(IMail mail)
         {
             AccountPanel accountPanel = new AccountPanel(driver);
 

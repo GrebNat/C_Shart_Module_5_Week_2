@@ -38,51 +38,55 @@ namespace M5W2.M5W2.PO
 
         }
 
-        public MailPage CreateNewMail(Mail mail)
+        public MailPage CreateNewMail(IMail mail)
         {
             createNewMailButton.Click();
             PopulateMailContent(mail);
+
+            new WebDriverWait(_driver, TimeSpan.FromSeconds(4000))
+                .Until(ExpectedConditions.ElementIsVisible(By.CssSelector(".aoD.hl")));
+
             sendToElement.Click();
-            sendToTextField.SendKeys(mail.mailTo);
-            subjectTextField.SendKeys(mail.subject);
+            sendToTextField.SendKeys(mail.MailTo);
+            subjectTextField.SendKeys(mail.Subject);
 
             return this;
         }
 
-        public void PopulateMailContent(Mail mail)
+        public void PopulateMailContent(IMail mail)
         {
-            mailBodyTextArea.SendKeys(mail.body);
+            mailBodyTextArea.SendKeys(mail.Body);
         }
 
-        public MailPage VerifyMailPresentInDraftFolder(Mail mail)
+        public MailPage VerifyMailPresentInDraftFolder(IMail mail)
         {
             draftLink.Click();
             Assert.True(draftMailListPanel.IsMailPresent(mail));
             return this;
         }
 
-        public MailPage VerifyMailContentInDraftFolder(Mail mail)
+        public MailPage VerifyMailContentInDraftFolder(IMail mail)
         {
             draftLink.Click();
     
             draftMailListPanel.OpenMail(mail);
 
-            Assert.AreEqual(mail.body, mailBodyTextArea.Text);
+            Assert.AreEqual(mail.Body, mailBodyTextArea.Text);
             sendToTextFieldForRead.Click();
-            Assert.AreEqual(mail.mailTo, sendToTextFieldForRead.GetAttribute("email"));
-            Assert.AreEqual(mail.subject, subjectTextFieldForRead.GetAttribute("value"));
+            Assert.AreEqual(mail.MailTo, sendToTextFieldForRead.GetAttribute("email"));
+            Assert.AreEqual(mail.Subject, subjectTextFieldForRead.GetAttribute("value"));
 
             return this;
         }
 
-        public MailPage VerifyMailNotPresentInDraftFolder(Mail mail)
+        public MailPage VerifyMailNotPresentInDraftFolder(IMail mail)
         {
             draftLink.Click();
             Assert.False(draftMailListPanel.IsMailPresentAfterWait(mail));
             return this;
         }
 
-        public MailPage VerifyMailPresentInSentFolder(Mail mail)
+        public MailPage VerifyMailPresentInSentFolder(IMail mail)
         {
             sentLink.Click();
             Assert.True(draftMailListPanel.IsMailPresent(mail));

@@ -21,10 +21,10 @@ namespace M5W2.M5W2.PO.Panels
         }
 
         public string RowTemplate { get; set; }
-        public abstract Boolean IsMailPresent(Mail mail);
-        public abstract Boolean IsMailListEmpty(Mail mail);
-        public abstract void OpenMail(Mail mail);
-        public abstract Boolean IsMailPresentAfterWait(Mail mail);
+        public abstract Boolean IsMailPresent(IMail mail);
+        public abstract Boolean IsMailListEmpty(IMail mail);
+        public abstract void OpenMail(IMail mail);
+        public abstract Boolean IsMailPresentAfterWait(IMail mail);
     }
 
     public class MailListPanel : MailListPanelAbstract
@@ -33,22 +33,22 @@ namespace M5W2.M5W2.PO.Panels
         {
         }
 
-        public override Boolean IsMailPresent(Mail mail)
+        public override Boolean IsMailPresent(IMail mail)
         {
-            return _driver.FindElement(By.XPath(string.Format(RowTemplate, mail.subject, mail.body))).Displayed;
+            return _driver.FindElement(By.XPath(string.Format(RowTemplate, mail.Subject, mail.Body))).Displayed;
         }
 
-        public override bool IsMailListEmpty(Mail mail)
+        public override bool IsMailListEmpty(IMail mail)
         {
             throw new NotImplementedException();
         }
 
-        public override void OpenMail(Mail mail)
+        public override void OpenMail(IMail mail)
         {
-            _driver.FindElement(By.XPath(string.Format(RowTemplate, mail.subject, mail.body))).Click();
+            _driver.FindElement(By.XPath(string.Format(RowTemplate, mail.Subject, mail.Body))).Click();
         }
 
-        public override Boolean IsMailPresentAfterWait(Mail mail)
+        public override Boolean IsMailPresentAfterWait(IMail mail)
         {
             int timer = 20, i = 0;
 
@@ -74,22 +74,22 @@ namespace M5W2.M5W2.PO.Panels
             this.mailListPanelAbstract = mailListPanelAbstract;
         }
 
-        public override bool IsMailPresent(Mail mail)
+        public override bool IsMailPresent(IMail mail)
         {
             return mailListPanelAbstract.IsMailPresent(mail);
         }
 
-        public override bool IsMailListEmpty(Mail mail)
+        public override bool IsMailListEmpty(IMail mail)
         {
             return mailListPanelAbstract.IsMailListEmpty(mail);
         }
 
-        public override void OpenMail(Mail mail)
+        public override void OpenMail(IMail mail)
         {
             mailListPanelAbstract.OpenMail(mail);
         }
 
-        public override Boolean IsMailPresentAfterWait(Mail mail)
+        public override Boolean IsMailPresentAfterWait(IMail mail)
         {
            return mailListPanelAbstract.IsMailPresentAfterWait(mail);
         }
